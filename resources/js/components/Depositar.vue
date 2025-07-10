@@ -44,9 +44,7 @@ const closeModal = () => {
 <template>
     <Dialog>
         <DialogTrigger as-child>
-            <Button
-                class=""
-            >
+            <Button>
                 Depositar
             </Button>
         </DialogTrigger>

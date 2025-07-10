@@ -4,6 +4,7 @@ import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
 import Depositar from '@/components/Depositar.vue';
+import Transferir from '@/components/Transferir.vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -24,8 +25,8 @@ const breadcrumbs: BreadcrumbItem[] = [
                 >
                     <Depositar></Depositar>
                 </div>
-                <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                    <PlaceholderPattern />
+                <div class="flex items-center justify-center relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
+                    <Transferir></Transferir>
                 </div>
                 <div class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <PlaceholderPattern />
