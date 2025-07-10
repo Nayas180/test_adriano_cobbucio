@@ -28,14 +28,14 @@ const form_register = useForm({
 });
 
 const submitLogin = () => {
-    form.post(route('login'), {
-        onFinish: () => form.reset('password'),
+    form_login.post(route('login'), {
+        onFinish: () => form_login.reset('password'),
     });
 };
 
 const submitRegister = () => {
-    form.post(route('register'), {
-        onFinish: () => form.reset('password', 'password_confirmation'),
+    form_register.post(route('register'), {
+        onFinish: () => form_register.reset('password', 'password_confirmation'),
     });
 };
 
