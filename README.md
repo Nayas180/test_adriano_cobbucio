@@ -22,10 +22,10 @@
   5 - Hora de rodar as migrations e seeders, porem antes, crie o alias em seu terminal para trabalhar com o SAIL, segue o comando abaixo </br>
     ``` alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)' ``` </br>
   6 - Rote as migrations ``` sail artisan migrate ``` </br>
-  7 - Abrir a tela de welcome (Essa tela eu inseri o login/cadastro nela mesma) </br>
-  8 - Efetue o cadastro </br>
-  9 - Pos o cadastro vai abrir a dashboard do sistema, nela você podera Depositar/Transferir e ver seu saldo. </br>
-  10 - Rote os seeders ``` sail artisan db:seed ``` </br>
+  7 - Rote os seeders ``` sail artisan db:seed ``` </br>
+  8 - Abrir a tela de welcome (Essa tela eu inseri o login/cadastro nela mesma) </br>
+  9 - Efetue o cadastro </br>
+  10 - Pos o cadastro vai abrir a dashboard do sistema, nela você podera Depositar/Transferir e ver seu saldo. </br>
 
   Apos tudo feito, pode testar tudo.
 
