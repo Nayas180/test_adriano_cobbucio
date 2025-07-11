@@ -22,16 +22,28 @@ import { Label } from '@/components/ui/label';
 // const passwordInput = ref<HTMLInputElement | null>(null);
 
 const form = useForm({
-    password: '',
+    valor: 0
 });
 
-const deleteUser = (e: Event) => {
+const hiddenError = ref(true);
+
+const depositar = (e: Event) => {
     e.preventDefault();
-    form.delete(route('profile.destroy'), {
+
+    if (form.valor <= 0) {
+        hiddenError.value = false;
+        return false;
+    }
+
+    hiddenError.value = true;
+
+    form.post(route("depositar"), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
-        onError: () => passwordInput.value?.focus(),
-        onFinish: () => form.reset(),
+        onFinish: () => {
+            closeModal();
+            alert("Deposito efetuado com sucesso"); 
+        },
     });
 };
 
@@ -49,7 +61,7 @@ const closeModal = () => {
             </Button>
         </DialogTrigger>
         <DialogContent>
-            <form>
+            <form @submit="depositar">
                 <DialogHeader>
                     <DialogTitle>Depositar</DialogTitle>
                     <DialogDescription>
@@ -58,6 +70,12 @@ const closeModal = () => {
                 </DialogHeader>
 
                 <div class="col-span-2 sm:col-span-1 mt-6 mb-6">
+                    <p
+                        :class="{ 'hidden' : hiddenError }"
+                        class="text-red-600 mb-6"
+                    >
+                        O valor do deposito não pode ser menor ou igual a zero.
+                    </p>
                     <label 
                         for="price" 
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -66,6 +84,7 @@ const closeModal = () => {
                     </label>
                     <input 
                         id="valor"
+                        v-model="form.valor"
                         type="number" 
                         name="price" 
                         class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" 

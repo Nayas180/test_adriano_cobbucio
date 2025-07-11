@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import PlaceholderPattern from '../components/PlaceholderPattern.vue';
 import Depositar from '@/components/Depositar.vue';
 import Transferir from '@/components/Transferir.vue';
+import axios from "axios";
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -13,13 +15,29 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-const getValorEmConta = () => {
+const getValorEmConta = async () => {
     let valor = 0;
 
-    return valor.toLocaleString('pt-br', {minimumFractionDigits: 2});
+    await axios.get(route("depositos.byUser")).then(response => {
+        response.data.forEach(deposito => {
+            valor += deposito.value;
+        });
+    });
+
+    valorTotalConta.value = valor.toLocaleString('pt-br', {minimumFractionDigits: 2});
 }
 
-const valorEmConta = getValorEmConta();
+const getUsers = async () => {
+    let data = [];
+
+    await axios.get("api/users/show/all").then(respose => {
+        data = respose.data;
+    });
+    
+    return ref(data);
+}
+
+const valorTotalConta = ref(getValorEmConta());
 </script>
 
 <template>
@@ -38,7 +56,7 @@ const valorEmConta = getValorEmConta();
                 </div>
                 <div class="flex items-center justify-center relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
                     <p class="text-[30px]">
-                        R$ {{ valorEmConta }}
+                        R$ {{ valorTotalConta }}
                     </p>
                 </div>
             </div>
@@ -47,6 +65,10 @@ const valorEmConta = getValorEmConta();
                     <h3 class="w-full text-center">
                         Lista de Contatos
                     </h3>
+
+                    <div v-for="user in getUsers()" :key="user.id">
+                        {{ user.id }}
+                    </div>
                 </div>
 
                 <div class="w-full">
