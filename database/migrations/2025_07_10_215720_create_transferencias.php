@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("id_user_from");
             $table->unsignedBigInteger("id_user_to");
+            $table->double("value");
             $table->foreign("id_user_from")->references("id")->on("users");
             $table->foreign("id_user_to")->references("id")->on("users");
             $table->softDeletes();

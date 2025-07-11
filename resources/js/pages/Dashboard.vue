@@ -18,14 +18,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 const getValorEmConta = async () => {
     let valor = 0;
 
-    await axios.get(route("depositos.byUser")).then(response => {
-        response.data.forEach(deposito => {
-            valor += deposito.value;
-        });
+    await axios.get(route("user.accountAmount")).then(response => {
+        valor = response.data;
     });
 
     valorTotalConta.value = valor.toLocaleString('pt-br', {minimumFractionDigits: 2});
-}
+};
 
 const getUsers = async () => {
     let data = [];
@@ -34,10 +32,11 @@ const getUsers = async () => {
         data = respose.data;
     });
     
-    return ref(data);
-}
+    return data;
+};
 
 const valorTotalConta = ref(getValorEmConta());
+const users = ref(getUsers());
 </script>
 
 <template>
@@ -66,7 +65,7 @@ const valorTotalConta = ref(getValorEmConta());
                         Lista de Contatos
                     </h3>
 
-                    <div v-for="user in getUsers()" :key="user.id">
+                    <div v-for="user in users" :key="user.id">
                         {{ user.id }}
                     </div>
                 </div>

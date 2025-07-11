@@ -19,8 +19,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
-// const passwordInput = ref<HTMLInputElement | null>(null);
-
 const form = useForm({
     valor: 0
 });

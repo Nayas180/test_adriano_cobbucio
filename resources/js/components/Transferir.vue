@@ -18,20 +18,49 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import axios from "axios";
 
-// const passwordInput = ref<HTMLInputElement | null>(null);
-
+const hiddenError = ref(true);
+const errorMensage = ref("");
 const form = useForm({
-    password: '',
+    id_user_to: 0,
+    value: 0
 });
 
-const deleteUser = (e: Event) => {
+const transferir = async (e: Event) => {
     e.preventDefault();
-    form.delete(route('profile.destroy'), {
+    let valorTotalConta = 0;
+
+    await axios.get(route("user.accountAmount")).then(response => {
+        valorTotalConta = response.data;
+    });
+
+    if (form.value > valorTotalConta) {
+        hiddenError.value = false;
+        errorMensage.value = "O valor da transferencia não pode ser maior que o em conta.";
+        return false;
+    }
+
+    if (form.id_user_to <= 0) {
+        hiddenError.value = false;
+        errorMensage.value = "A chave não pode ser valor zerado.";
+        return false;
+    }
+
+    if (form.value <= 0) {
+        hiddenError.value = false;
+        errorMensage.value = "Não é possivel transferir valor zerado.";
+        return false;
+    }
+
+    form.post(route('transferir'), {
         preserveScroll: true,
-        onSuccess: () => closeModal(),
-        onError: () => passwordInput.value?.focus(),
-        onFinish: () => form.reset(),
+        onSuccess: (response) => closeModal(),
+        onFinish: (response) => {
+            console.log(response)
+            closeModal();
+            alert("Transferencia efetuado com sucesso"); 
+        }
     });
 };
 
@@ -49,7 +78,7 @@ const closeModal = () => {
             </Button>
         </DialogTrigger>
         <DialogContent>
-            <form>
+            <form @submit="transferir">
                 <DialogHeader>
                     <DialogTitle>Transferir</DialogTitle>
                     <DialogDescription>
@@ -58,18 +87,25 @@ const closeModal = () => {
                 </DialogHeader>
 
                 <div class="mt-6 mb-6">    
+                    <p
+                        :class="{ 'hidden' : hiddenError }"
+                        class="text-red-600 mb-6"
+                    >  
+                        {{ errorMensage }}
+                    </p>
                     <div class="col-span-2 mb-3">
                         <label 
                             for="chave" 
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Chave de transferencia
+                            Chave de transferencia (ID do usuario)
                         </label>
                         <input 
                             id="chave_transferencia"
-                            type="text"
+                            v-model="form.id_user_to"
+                            type="number"
                             name="name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"  
+                            class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"  
                             required=""
                         >
                     </div>
@@ -83,7 +119,8 @@ const closeModal = () => {
                         </label>
                         <input 
                             id="valor"
-                            type="number" 
+                            type="number"
+                            v-model="form.value"
                             name="price" 
                             class="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" 
                             placeholder="R$10"

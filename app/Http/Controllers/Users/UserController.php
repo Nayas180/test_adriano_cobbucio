@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\AccountServices;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -34,11 +35,11 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the account amount by user
      */
-    public function show(string $id)
+    public function show_accountAmount() : float
     {
-        //
+        return AccountServices::getAccountAmount();
     }
 
     /**

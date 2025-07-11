@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Depositos;
+namespace App\Http\Controllers\Transferencias;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\DepositoRequest;
-use App\Models\Depositos;
+use App\Http\Requests\TransferenciaRequest;
+use App\Http\Services\AccountServices;
+use App\Models\Transferencias;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DepositosController extends Controller
+class TransferenciasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,12 +22,9 @@ class DepositosController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(DepositoRequest $request)
+    public function create(TransferenciaRequest $request)
     {
-        Depositos::create([
-            "id_user" => Auth::id(),
-            "value" => $request->get("valor")
-        ]);
+        return AccountServices::setTransferencia($request);
     }
 
     /**
@@ -40,9 +38,17 @@ class DepositosController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show()
+    public function show_toUser()
     {
-        return response()->json(Depositos::all()->where("id_user", Auth::id())->toArray());
+        return response()->json(Transferencias::all()->where("id_user_to", Auth::id())->toArray());
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show_fromUser()
+    {
+        return response()->json(Transferencias::all()->where("id_user_from", Auth::id())->toArray());
     }
 
     /**
