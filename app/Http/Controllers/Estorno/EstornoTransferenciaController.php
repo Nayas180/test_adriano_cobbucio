@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Http\Controllers\Estorno;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Estorno\EstornoTransferenciasRequest;
+use App\Http\Services\EstornoService;
+use Illuminate\Http\Request;
+
+class EstornoTransferenciaController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create(EstornoTransferenciasRequest $request)
+    {
+        EstornoService::processEstornoTransferencia(
+            $request->get("id_transferencia"),
+            $request->get("id_solicitacao")
+        );
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
+    }
+}

@@ -3,9 +3,11 @@
 namespace App\Http\Services;
 
 use App\Http\Requests\TransferenciaRequest;
-use App\Models\{Depositos, EstornoDepositos, EstornoTransferencias, Transferencias};
+use App\Models\{Depositos, EstornoDepositos, EstornoTransferencias, Transferencias, User};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\isNull;
 
 class AccountServices {
 
@@ -31,7 +33,7 @@ class AccountServices {
         foreach ($transferencias_made as $made) {
             $amount -= $made["value"];
         }
-
+        
         return $amount + self::getEstornoAmount();
     }
 
@@ -49,20 +51,29 @@ class AccountServices {
                                ->where("depositos.id_user", $id_user)
                                ->get()
                                ->toArray();
-        $estorno_transferencias = DB::table("estorno_transferencias")
+        $estorno_transferencias_from = DB::table("estorno_transferencias")
+                                    ->join("transferencias", "id_transferencia", "=", "transferencias.id")
+                                    ->where("transferencias.id_user_from", $id_user)
+                                    ->get()
+                                    ->toArray();
+        $estorno_transferencias_to = DB::table("estorno_transferencias")
                                     ->join("transferencias", "id_transferencia", "=", "transferencias.id")
                                     ->where("transferencias.id_user_to", $id_user)
                                     ->get()
                                     ->toArray();
 
         foreach ($estorno_depositos as $deposito) {
-            $valor_estornado += $deposito->value;
+            $valor_estornado -= $deposito->value;
+        }
+        
+        foreach ($estorno_transferencias_from as $transferencia_from) {
+            $valor_estornado += $transferencia_from->value;
         }
 
-        foreach ($estorno_transferencias as $transferencia) {
-            $valor_estornado += $transferencia->value;
+        foreach ($estorno_transferencias_to as $transferencia_to) {
+            $valor_estornado -= $transferencia_to->value;
         }
-
+        
         return $valor_estornado;
     }
 
@@ -70,24 +81,28 @@ class AccountServices {
      * Efetua a transferencia para outro usuario
      *
      * @param TransferenciaRequest $request
-     * @return boolean
+     * @return void
      */
     public static function setTransferencia(TransferenciaRequest $request) : bool
     {
         $id_user = Auth::id();
         $value_to_transfer = $request->get("value");
+        $user_to_transfer = User::find($request->get("id_user_to"));
 
         if (
             $value_to_transfer > self::getAccountAmount()
             || $request->get("id_user_to") == $id_user
+            || is_null($user_to_transfer)
         ) {
             return false;
         }
 
-        return Transferencias::create([
+        Transferencias::create([
             "id_user_from" => $id_user,
             "id_user_to" => $request->get("id_user_to"),
             "value" => $value_to_transfer
         ]);
+
+        return true;
     }
 }
