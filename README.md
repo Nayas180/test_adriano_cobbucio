@@ -19,12 +19,12 @@
   2 - Abra o terminal </br>
   3 - Digite ```./vendor/bin/sail up -d``` o projeto do Sail irá subir em seu docker (Caso esteja usando Windows use o WSL2) </br>
   4 - Ao finalizar abra o localhost </br>
-  5 - Abrir a tela de welcome (Essa tela eu inseri o login/cadastro nela mesma) </br>
-  6 - Efetue o cadastro </br>
-  7 - Pos o cadastro vai abrir a dashboard do sistema, nela você podera Depositar/Transferir e ver seu saldo. </br>
-  8 - Hora de rodar as migrations e seeders, porem antes, crie o alias em seu terminal para trabalhar com o SAIL, segue o comando abaixo </br>
+  5 - Hora de rodar as migrations e seeders, porem antes, crie o alias em seu terminal para trabalhar com o SAIL, segue o comando abaixo </br>
     ``` alias sail='sh $([ -f sail ] && echo sail || echo vendor/bin/sail)' ``` </br>
-  9 - Rote as migrations ``` sail artisan migrate ``` </br>
+  6 - Rote as migrations ``` sail artisan migrate ``` </br>
+  7 - Abrir a tela de welcome (Essa tela eu inseri o login/cadastro nela mesma) </br>
+  8 - Efetue o cadastro </br>
+  9 - Pos o cadastro vai abrir a dashboard do sistema, nela você podera Depositar/Transferir e ver seu saldo. </br>
   10 - Rote os seeders ``` sail artisan db:seed ``` </br>
 
   Apos tudo feito, pode testar tudo.
